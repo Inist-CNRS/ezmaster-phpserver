@@ -24,3 +24,6 @@ RUN echo '{ \
   "dataPath": "/var/www/html/" \
 }' > /etc/ezmaster.json
 
+COPY docker-entrypoint.overload.sh /usr/local/bin/
+ENTRYPOINT [ "docker-entrypoint.overload.sh" ]
+CMD ["apache2-foreground"]
