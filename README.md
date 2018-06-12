@@ -5,3 +5,8 @@
 php web server for [ezmaster](https://github.com/Inist-CNRS/ezmaster)
 
 
+## Changelog
+
+### version 1.2.0
+
+- Add a way to specify the SMTP mail server
