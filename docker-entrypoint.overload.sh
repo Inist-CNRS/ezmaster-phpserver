@@ -15,5 +15,7 @@ fi
 chown -R www-data:daemon /var/www/html
 # to allow webdav server to modify all files
 chmod -R 770 /var/www/html
+# to allow daemon to use temp directory
+chmod 1777 /tmp
 
 exec "$@"
