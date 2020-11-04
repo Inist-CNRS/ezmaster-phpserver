@@ -4,7 +4,7 @@ set -e
 # adjust mail server parmeters from php.ini values
 SMTP_HOST=$(php -r "echo ini_get('SMTP');")
 SMTP_PORT=$(php -r "echo ini_get('smtp_port');")
-sed -i "s/#hostname=localdomain:25/hostname=$SMTP_HOST:$SMTP_PORT/g" /etc/esmtprc
+sed -i "s/[#]*hostname=.*/hostname=$SMTP_HOST:$SMTP_PORT/g" /etc/esmtprc
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
