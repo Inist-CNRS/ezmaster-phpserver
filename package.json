@@ -1,6 +1,6 @@
 {
   "name": "ezmaster-phpserver",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "[Ezmasterization](https://github.com/Inist-CNRS/ezmaster) of php web server",
   "scripts": {
     "insertversion:readme": "sed -i \"s#\\(inistcnrs/ezmaster-phpserver:\\)\\([\\.a-z0-9]\\+\\)#\\1${npm_package_version}#g\" README.md",
