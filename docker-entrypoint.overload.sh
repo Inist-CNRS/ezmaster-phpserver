@@ -10,6 +10,11 @@ sed -i "s/[#]*hostname=.*/hostname=$SMTP_HOST:$SMTP_PORT/g" /etc/esmtprc
 if [ "${1#-}" != "$1" ]; then
 	set -- apache2-foreground "$@"
 fi
+
+if [ -f "/var/www/html/composer.json" ]; then
+	/usr/local/bin/composer-install.sh &
+fi
+
 # Fix permissions : avoid different user:group in the exposed directory
 chown -R www-data:daemon /var/www/html
 # to allow webdav server to modify all files

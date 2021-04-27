@@ -52,6 +52,14 @@ RUN apt-get update \
 	&& apt-get purge -y \
 		libxml2-dev
 
+# xml*
+RUN apt-get update \
+	&& apt-get install -y \
+		libxslt-dev --no-install-recommends \
+	&& CFLAGS="-I/usr/src/php" docker-php-ext-install xsl \
+	&& apt-get purge -y \
+		libxslt-dev
+
 # zip*
 RUN apt-get update \
 	&& apt-get install -y \
@@ -85,12 +93,22 @@ RUN apt-get install -y \
 		graphviz \
 		esmtp \
 	&& docker-php-ext-install -j$(nproc) \
+		gettext \
 		mysqli \
 		exif \
+		intl \
 	&& rm -r /var/lib/apt/lists/*
 
 # Apache : rewrite
 RUN a2enmod rewrite
+
+# PHP: composer
+RUN apt-get update \
+	&& apt-get install -y git unzip \
+	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Cleanup
+RUN apt-get autoremove -y
 
 COPY php.ini /usr/local/etc/php/
 COPY www/ /var/www/html/
@@ -104,6 +122,6 @@ RUN echo '{ \
   "dataPath": "/var/www/html/" \
 }' > /etc/ezmaster.json
 
-COPY docker-entrypoint.overload.sh /usr/local/bin/
+COPY docker-entrypoint.overload.sh composer-install.sh /usr/local/bin/
 ENTRYPOINT [ "docker-entrypoint.overload.sh" ]
 CMD ["apache2-foreground"]
