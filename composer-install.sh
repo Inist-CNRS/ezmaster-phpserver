@@ -1,5 +1,7 @@
 #!/bin/sh
 set -e
 
-cd /var/www/html/
-php /usr/local/bin/composer install --no-dev
+if [ -f "/var/www/html/composer.json" ]; then
+	cd /var/www/html/
+	php /usr/local/bin/composer install --no-dev
+fi
