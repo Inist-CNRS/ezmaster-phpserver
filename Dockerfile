@@ -40,9 +40,7 @@ RUN apt-get update \
 	&& pecl install \
 		imagick \
 	&& docker-php-ext-enable \
-		imagick \
-	&& apt-get purge -y \
-		libmagickwand-dev
+		imagick
 
 # xml*
 RUN apt-get update \
@@ -65,10 +63,7 @@ RUN apt-get update \
 	&& apt-get install -y \
 		libzip-dev \
 		zlib1g-dev \
-	&& docker-php-ext-install zip \
-	&& apt-get purge -y \
-		libzip-dev \
-		zlib1g-dev
+	&& docker-php-ext-install zip
 
 # libsodium
 RUN apt-get update \
@@ -88,19 +83,34 @@ RUN apt-get update \
 		libmcrypt-dev \
 		libonig-dev
 
+# Gettext, locale, timezone
+RUN apt-get install -y locales \
+	&& docker-php-ext-install -j$(nproc) \
+		gettext \
+		intl && \
+		sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+		sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen && \
+		sed -i -e 's/# es_ES.UTF-8 UTF-8/es_ES.UTF-8 UTF-8/' /etc/locale.gen && \
+		sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
+		sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
+		locale-gen
+
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
 # Divers
 RUN apt-get install -y \
 		graphviz \
 		esmtp \
 	&& docker-php-ext-install -j$(nproc) \
-		gettext \
 		mysqli \
 		exif \
-		intl \
 	&& rm -r /var/lib/apt/lists/*
 
-# Apache : rewrite
-RUN a2enmod rewrite
+# Apache : modules
+RUN a2enmod rewrite \
+	&& a2enmod headers
 
 # PHP: composer
 RUN apt-get update \
